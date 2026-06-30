@@ -8,6 +8,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+
 class Distributor(models.Model):
     name = models.CharField(max_length=100)
     contact_name = models.CharField(max_length=100)
@@ -20,8 +21,9 @@ class Distributor(models.Model):
     def __str__(self):
         return self.name
 
+
 class  InventoryItem(models.Model):
-    name = models.CharField(max_length=100)
+    inventory_name = models.ForeignKey(BarProduct, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     size = models.DecimalField(max_digits=10, decimal_places=2)
     units = models.CharField(max_length=50)
@@ -29,7 +31,7 @@ class  InventoryItem(models.Model):
     distributor = models.ForeignKey(Distributor, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.inventory_name.product_name  # Access the name of the related BarProduct instance
     
 class InventoryStock(models.Model):
     product = models.ForeignKey(InventoryItem, on_delete=models.CASCADE)

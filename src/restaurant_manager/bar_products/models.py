@@ -2,10 +2,10 @@ from django.db import models
 
 # Create your models here.
 class BarProduct(models.Model):
-    name = models.CharField(max_length=100)
+    product_name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.name
+        return self.product_name
 
 class Beer(models.Model):
     name = models.CharField(max_length=100)
