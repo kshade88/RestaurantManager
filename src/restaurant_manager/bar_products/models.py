@@ -4,6 +4,7 @@ from django.db import models
 
 class Category(models.Model):
     category_name = models.CharField(max_length=100)
+    # detail_type = models.CharField(max_length=100, null=True, blank=True, default='None')
 
     def __str__(self):
         return self.category_name
@@ -11,6 +12,7 @@ class Category(models.Model):
 class BarProduct(models.Model):
     product_name = models.CharField(max_length=100)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
+    # tags = ""  # This field can be used to store any additional tags or keywords related to the product
 
     def __str__(self):
         return self.product_name
@@ -22,6 +24,7 @@ class BeerDetail(models.Model):
     abv = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     style = models.CharField(max_length=100, null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
+    # tags = ""  beer specific tags
 
     def __str__(self):
         return self.name.product_name
@@ -35,6 +38,7 @@ class WineDetail(models.Model):
     state = models.CharField(max_length=100, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
+    # tags = ""  wine specific tags
 
     def __str__(self):
         return self.name.product_name
@@ -60,7 +64,9 @@ class SpiritDetail(models.Model):
     proof = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     spirit_category = models.ForeignKey(SpiritCategory, on_delete=models.CASCADE, null=True, blank=True)
     detail_category = models.ForeignKey(DetailCategory, on_delete=models.CASCADE, null=True, blank=True)
+    # notes will be used for any additional information about the spirit that doesn't fit into the other fields. Used for training purposes etc
     notes = models.TextField(null=True, blank=True)
+    # tags = "" # This field can be used to store any additional tags or keywords related to the spirit
 
     def __str__(self):
         return self.name.product_name
@@ -72,6 +78,7 @@ class liqueurDetail(models.Model):
     proof = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     detail_category = models.ForeignKey(DetailCategory, on_delete=models.CASCADE, null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
+    # tags = "" # This field can be used to store any additional tags or keywords related to the liqueur
 
     def __str__(self):
         return self.name.product_name
