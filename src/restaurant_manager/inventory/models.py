@@ -1,5 +1,5 @@
 from django.db import models
-from bar_products.models import BarProduct
+from products.models import Product
 
 # Create your models here.
 class Distributor(models.Model):
@@ -16,7 +16,7 @@ class Distributor(models.Model):
 
 
 class  StockItem(models.Model):
-    stock_name = models.ForeignKey(BarProduct, on_delete=models.CASCADE)
+    stock_name = models.ForeignKey(Product, on_delete=models.CASCADE)
     size = models.DecimalField(max_digits=10, decimal_places=2)
     units = models.CharField(max_length=50)
     price = models.DecimalField(max_digits=10, decimal_places=2)
