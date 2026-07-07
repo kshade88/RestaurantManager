@@ -26,7 +26,7 @@ def spirit_detail(request, pk):
     # Render the template with the product context
     return render(request, 'bar/spirit_detail.html', {'spirit': spirit})
 
-class SpiritDetailView(View):
+class SpiritDetailCreateView(View):
 
     template_name = 'bar/spirit_form.html'
 
@@ -56,4 +56,39 @@ class SpiritDetailView(View):
             'product_form': product_form,
             'detail_form': detail_form,
          }
+        return render(request, self.template_name, context)
+
+class SpiritDetailUpdateView(View):
+
+    template_name = 'bar/spirit_form.html'
+
+    def get(self, request, pk):
+        product = Product.objects.get(pk=pk)
+        spirit_detail = SpiritDetail.objects.get(name=product)
+
+        product_form = ProductForm(instance=product)
+        detail_form = SpiritDetailForm(instance=spirit_detail)
+
+        context = {
+            'product_form': product_form,
+            'detail_form': detail_form,
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        product = Product.objects.get(pk=pk)
+        spirit_detail = SpiritDetail.objects.get(name=product)
+
+        product_form = ProductForm(request.POST, instance=product)
+        detail_form = SpiritDetailForm(request.POST, instance=spirit_detail)
+
+        if product_form.is_valid() and detail_form.is_valid():
+            product_form.save()
+            detail_form.save()
+            return redirect('spirit-detail', pk=product.pk)
+
+        context = {
+            'product_form': product_form,
+            'detail_form': detail_form,
+        }
         return render(request, self.template_name, context)
