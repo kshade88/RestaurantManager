@@ -4,6 +4,6 @@
 
 <div>
 {% for spirit in spirits %}
-    <p><a href="{% url 'spirit-detail' spirit.pk %}">{{ spirit.product_name }}</a></p>
+    <p><a href="{% url 'spirit-detail' spirit.pk %}">{{ spirit.name }}</a></p>
 {% endfor %}
 </div>

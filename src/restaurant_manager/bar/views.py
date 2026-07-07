@@ -1,5 +1,7 @@
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.views import View
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 
 from products.models import Product, Category
@@ -11,9 +13,12 @@ from .models import SpiritDetail
 
 def spirit_list(request):
     # Fetch all products from the database
-    Category.objects.filter(category_name='Spirit')
+    # Category.objects.filter(category_name='Spirit')
 
-    spirits = Product.objects.filter(category__category_name='Spirit')
+    # spirits = Product.objects.filter(category__category_name='Spirit')
+
+    # for spirit in spirits:
+    spirits = SpiritDetail.objects.all()
     
     # Render the template with the products context
     return render(request, 'bar/spirit_list.html', {'spirits': spirits})
@@ -92,3 +97,12 @@ class SpiritDetailUpdateView(View):
             'detail_form': detail_form,
         }
         return render(request, self.template_name, context)
+
+class SpiritDetailDeleteView(DeleteView):
+
+    template_name = 'bar/confirm_delete.html'
+
+    model = SpiritDetail
+
+    success_url = reverse_lazy('spirit-list')
+
