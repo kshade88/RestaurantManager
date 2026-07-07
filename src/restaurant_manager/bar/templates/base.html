@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bar Manager{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <h1>{% block header %}Bar Manager{% endblock %}</h1>
+        <div>
+            {% block navigation %}
+            <nav>
+                <ul>
+                    <li><a href="{% url 'bar:spirit_list' %}">Spirits</a></li>
+                    <li><a href="{% url 'bar:spiritcategory_list' %}">Wine</a></li>
+                    <li><a href="{% url 'bar:detailcategory_list' %}">Beer</a></li>
+                    <li><a href="{% url 'bar:spirit_list' %}">Ingredients</a></li>
+                    <li><a href="{% url 'bar:spirit_list' %}">Mixers</a></li>
+                    <li><a href="{% url 'bar:spirit_list' %}">Garnishes</a></li>
+                </ul>
+            </nav>
+            {% endblock %}
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        
+    </footer>
+</body>
+</html>

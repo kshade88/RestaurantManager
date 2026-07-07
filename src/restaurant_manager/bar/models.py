@@ -43,7 +43,11 @@ class WineDetail(models.Model):
         return self.name.product_name
 
 class SpiritDetail(models.Model):
-    name = models.OneToOneField(Product, on_delete=models.CASCADE, primary_key=True)
+    name = models.OneToOneField(
+        Product, 
+        on_delete=models.CASCADE, 
+        primary_key=True, 
+        related_name='spirit_detail')
     distillery = models.CharField(max_length=100, null=True, blank=True)
     origin = models.CharField(max_length=100, null=True, blank=True)
     proof = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
