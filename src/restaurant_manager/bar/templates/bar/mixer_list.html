@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <h1>Mixer List</h1>
+    <a href="{% url 'mixer-create' %}">Add New Mixer</a>
+    <ul>
+        {% for mixer in mixers %}
+            <li><a href="{% url 'mixer-detail' mixer.pk %}">{{ mixer.product }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock content %}

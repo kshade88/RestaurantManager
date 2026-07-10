@@ -1,9 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
 <h1>Spirits</h1>
 
 <h3><a href="{% url 'spirit-create' %}">Add New Spirit</a></h3>
 
 <div>
-{% for spirit in spirits %}
-    <p><a href="{% url 'spirit-detail' spirit.pk %}">{{ spirit.name }}</a></p>
-{% endfor %}
+    <ul>
+        {% for spirit in spirits %}
+            <li><a href="{% url 'spirit-detail' spirit.pk %}">{{ spirit.product.product_name }}</a></li>
+        {% endfor %}
+    </ul>
 </div>
+{% endblock content %}

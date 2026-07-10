@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Liqueurs</h1>
+    <a href="{% url "liqueur-create" %}">Add New Liqueur</a>
+    <ul>
+        {% for liqueur in liqueurs %}
+            <li>
+            <a href="{% url "liqueur-detail" liqueur.pk %}">{{ liqueur.product }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock content %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}{{ ingredient.product }}{% endblock title %}
+
+{% block content %}
+<div>
+    <h2>{{ ingredient.product }}</h2>
+    <p>Made in house: {{ ingredient.made_in_house }}</p>
+    <p>Notes: {{ ingredient.notes }}</p>
+    <a href="{% url 'ingredient-update' ingredient.pk %}">Edit</a>
+    <a href="{% url 'ingredient-delete' ingredient.pk %}">Delete</a>
+</div>
+{% endblock content %}

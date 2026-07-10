@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Product, Category
+from .models import Product
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 # Create your views here.
@@ -17,13 +17,13 @@ class ProductDetailView(DetailView):
 class ProductCreateView(CreateView):
     model = Product
     template_name = 'products/product_form.html'
-    fields = ['product_name', 'category', 'tags']
+    fields = ['product_name', 'tags']
     success_url = '/products/'
 
 class ProductUpdateView(UpdateView):
     model = Product
     template_name = 'products/product_form.html'
-    fields = ['product_name', 'category', 'tags']
+    fields = ['product_name', 'tags']
     success_url = '/products/'
 
 class ProductDeleteView(DeleteView):

@@ -1,10 +1,15 @@
-<h2>{{ spirit.name }}</h2>
-<p>Distillery: {{ spirit.distillery }}</p>
-<p>Origin: {{ spirit.origin }}</p>
-<p>Proof: {{ spirit.proof }}</p>
-<p>Spirit Category: {{ spirit.spirit_category }}</p>
-<p>Detail Category: {{ spirit.detail_category }}</p>
-<p>Notes: {{ spirit.notes }}</p>
+{% extends "base.html" %}
 
-<h3><a href="{% url 'spirit-update' spirit.pk %}">Edit Spirit</a></h3>
-<h3><a href="{% url 'spirit-delete' spirit.pk %}">Delete Spirit</a></h3>
+{% block content %}
+<div>
+    <h2>{{ spirit.product.product_name }}</h2>
+    <p>Distillery: {{ spirit.distillery }}</p>
+    <p>Origin: {{ spirit.origin }}</p>
+    <p>Proof: {{ spirit.proof }}</p>
+    <p>Spirit Category: {{ spirit.spirit_category }}</p>
+    <p>Detail Category: {{ spirit.detail_category }}</p>
+    <p>Notes: {{ spirit.notes }}</p>
+    <h3><a href="{% url 'spirit-update' spirit.pk %}">Edit Spirit</a></h3>
+    <h3><a href="{% url 'spirit-delete' spirit.pk %}">Delete Spirit</a></h3>
+</div>
+{% endblock content %}

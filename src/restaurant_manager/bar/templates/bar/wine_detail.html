@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <h1>{{ wine.product }}</h1>
+    <p>Winery: {{ wine.winery }}</p>
+    <p>Varietal: {{ wine.varietal }}</p>
+    <p>Vintage: {{ wine.vintage }}</p>
+    <p>Region: {{ wine.region }}</p>
+    <p>State: {{ wine.state }}</p>
+    <p>Country: {{ wine.country }}</p>
+    <p>Notes: {{ wine.description }}</p>
+    <a href="{% url 'wine-update' wine.pk %}">Edit</a>
+    <a href="{% url 'wine-delete' wine.pk %}">Delete</a>
+</div>
+{% endblock content %}

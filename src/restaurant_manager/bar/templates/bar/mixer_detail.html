@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <h1>{{ mixer.product }}</h1>
+    <p>Type: {{ mixer.type }}</p>
+    <p>Brand: {{ mixer.brand }}</p>
+    <p>Made in house: {{ mixer.made_in_house }}</p>
+    <p>Notes: {{ mixer.description }}</p>
+    <a href="{% url 'mixer-update' mixer.pk %}">Edit</a>
+    <a href="{% url 'mixer-delete' mixer.pk %}">Delete</a>
+</div>
+{% endblock content %}

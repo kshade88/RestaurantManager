@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Distributor, InventoryStock, StockItem, StockMovement
+from .models import InventoryStock, StockItem, StockMovement, Distributor
 
 # Register your models here.
 

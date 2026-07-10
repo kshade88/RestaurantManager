@@ -1,0 +1,10 @@
+<div>
+    <h1>Confirm Delete</h1>
+    <p>Are you sure you want to delete {{ beer.product }}?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirm Delete</button>
+        <a href="{% url 'beer-detail' beer.pk %}">Cancel</a>
+    </form>
+</div>

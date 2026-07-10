@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}{{ garnish.name }}{% endblock title %}
+
+{% block content %}
+    <h2>{{ garnish.product }}</h2>
+    <p>Made in house: {{ garnish.made_in_house }}</p>
+    <p>Notes: {{ garnish.notes }}</p>
+    <a href="{% url "garnish-update" garnish.pk %}">Edit</a>
+    <a href="{% url "garnish-delete" garnish.pk %}">Delete</a>
+{% endblock content %}

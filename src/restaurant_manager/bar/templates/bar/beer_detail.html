@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}{{ beer.product }}{% endblock title %}
+
+{% block content %}
+    <h2>{{ beer.product }}</h2>
+    <p>Brewery: {{ beer.brewery }}</p>
+    <p>ABV: {{ beer.abv }}%</p>
+    <p>Style: {{ beer.style }}</p>
+    <p>Origin: {{ beer.origin }}</p>
+    <p>Notes: {{ beer.notes }}</p>
+    <a href="{% url "beer-update" beer.pk %}">Edit</a> |
+    <a href="{% url "beer-delete" beer.pk %}">Delete</a>
+{% endblock content %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            <h2>Product Info</h2>
+            {{ product_form.as_p }}
+            <h2>Garnish Info</h2>
+            {{ garnish_form.as_p }}
+            <button type="submit">Save</button>
+        </form>
+    </div>
+{% endblock content %}

@@ -1,16 +1,14 @@
-<form method="post">
+{% extends "base.html" %}
 
-    {% csrf_token %}
-
-    <h2>Product Info</h2>
-    
-    {{ product_form.as_p }}
-    
-    <h2>Spirit Info</h2>
-
-    {{ detail_form.as_p }}
-
-    <button type="submit">Save</button>
-
-</form>
-
+{% block content %}
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            <h2>Product Info</h2>
+            {{ product_form.as_p }}
+            <h2>Spirit Info</h2>
+            {{ spirit_form.as_p }}
+            <button type="submit">Save</button>
+        </form>
+    </div>
+{% endblock content %}
