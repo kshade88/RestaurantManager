@@ -3,10 +3,13 @@
 {% block content %}
 <div>
     <h1>{{ mixer.product }}</h1>
-    <p>Type: {{ mixer.type }}</p>
+    {% if mixer.brand %}
     <p>Brand: {{ mixer.brand }}</p>
-    <p>Made in house: {{ mixer.made_in_house }}</p>
-    <p>Notes: {{ mixer.description }}</p>
+    {% endif %}
+    {% if mixer.made_in_house %}
+    <p>Made in house</p>
+    {% endif %}
+    <p>Notes: {{ mixer.notes }}</p>
     <a href="{% url 'mixer-update' mixer.pk %}">Edit</a>
     <a href="{% url 'mixer-delete' mixer.pk %}">Delete</a>
 </div>
