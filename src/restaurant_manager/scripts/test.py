@@ -1,6 +1,7 @@
-from products.models import Product, Category
-from bar.models import SpiritCategory, DetailCategory, BeerDetail, WineDetail, SpiritDetail, liqueurDetail, GarnishDetail
-from inventory.models import Distributor, StockItem, InventoryStock, StockMovement
+from products.models import Product
+from bar.models import SpiritCategory, DetailCategory
+from inventory.models import Distributor, StockItem, InventoryStock, OrderItem, Order
+from inventory.services import process_order
 from django.db import connection
 
 # def run():
@@ -25,15 +26,17 @@ from django.db import connection
 #         print("no new spirit product created")
 
 def run():
-    product = Product.objects.get(product_name='Test Spirit 6')
-    quantity = 10
-    stock_item = StockItem.objects.get(product=product)
+    
+    order = Order.objects.get(id=1)
 
-    def add_item_to_stock(stock_item, quantity):
-        inventory_stock = InventoryStock.objects.get_or_create(stock_item=stock_item)[0]
-        inventory_stock.quantity += quantity
-        inventory_stock.save()
+    # if order.processed:
+    #     print("Order has already been processed.")
+    # else:
+    #     print("Order has not been processed yet.")
 
-
-    add_item_to_stock(stock_item, quantity)
-
+    # if not order.processed:
+    process_order(order)
+    for order_item in order.order_items.all():
+        inventory_item = order_item.stock_item.inventory_stock
+        print(f"Stock Item: {order_item.stock_item}, Updated Quantity: {inventory_item.quantity}")
+    print("Order processing complete.")
