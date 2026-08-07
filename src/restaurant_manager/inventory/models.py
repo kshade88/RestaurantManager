@@ -18,9 +18,7 @@ class Distributor(models.Model):
 class  StockItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     size = models.DecimalField(max_digits=10, decimal_places=2)
-    units = models.CharField(max_length=50)
-    # Will more than likely remove unit_cost
-    unit_cost = models.DecimalField(max_digits=10, decimal_places=2) 
+    units = models.CharField(max_length=50) 
     # last ordered unit cost
     last_purchased_unit_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     # weighted average cost
@@ -44,6 +42,7 @@ class InventoryStock(models.Model):
 class Order(models.Model):
     distributor = models.ForeignKey(Distributor, on_delete=models.CASCADE, null=True, blank=True)
     order_date = models.DateTimeField(auto_now_add=True)
+    order_processed_at = models.DateField(null=True, blank=True)
     processed = models.BooleanField(default=False)
 
     def __str__(self):
@@ -55,7 +54,6 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
     quantity_received = models.DecimalField(max_digits=10, decimal_places=1, default=0)
     quantity_ordered = models.DecimalField(max_digits=10, decimal_places=1, default=1)
-    order_date = models.DateTimeField(auto_now_add=True)
     unit_cost_at_purchase = models.DecimalField(max_digits=10, decimal_places=2, default=None, null=True, blank=True)
 
     # Automatically set the unit cost at purchase if not provided when creating a new order item.

@@ -74,6 +74,7 @@ def calculate_moving_average_cost(
         current_average_unit_cost,
         quantity,
 ):
+    
     unit_cost_at_purchase = Decimal(unit_cost_at_purchase)
     quantity_received = Decimal(quantity_received)
     current_average_unit_cost = Decimal(current_average_unit_cost)
@@ -90,7 +91,7 @@ def calculate_moving_average_cost(
     Returns:
         The updated moving average cost.
     """
-    if quantity_received <= 0:
+    if quantity_received < 0:
         raise ValueError("Received quantity must be greater than zero")
     
     if quantity < 0:
@@ -123,19 +124,13 @@ def update_inventory_stock_quantity(order_item):
 @transaction.atomic
 def process_order(order):
     if order.processed:
-        print("Order has already been processed.")
-        return True
+        raise ValueError("Order has already been processed.")
+    order.order_processed_at = timezone.now()
     for order_item in order.order_items.all():
         stock_item = order_item.stock_item
-        print(f"Processing order item for stock item: {stock_item.product}")
-        print(f"Average unit cost before update: {stock_item.current_average_unit_cost}")
-        print(f"Quantity before update: {stock_item.inventory_stock.quantity}")
-        print(f"Quantity received for this order item: {order_item.quantity_received} at cost: {order_item.unit_cost_at_purchase}")
         update_current_average_unit_cost(stock_item, order_item)
         update_inventory_stock_quantity(order_item)
-        print(f"Average unit cost after update: {stock_item.current_average_unit_cost}")
-        print(f"Quantity after update: {stock_item.inventory_stock.quantity}")
-        stock_item.last_purchased_at = timezone.now()
+        stock_item.last_purchased_at = order.order_processed_at
         stock_item.last_purchased_unit_cost = order_item.unit_cost_at_purchase
         stock_item.save(update_fields=['current_average_unit_cost', 'last_purchased_at', 'last_purchased_unit_cost'])
     order.processed = True
