@@ -1,5 +1,7 @@
 from django.db import models
 from products.models import Product
+from recipe.models import Recipe
+from units.choices import RECIPE_UNITS
 
 # Create your models here.
 class SpiritCategory(models.Model):
@@ -92,6 +94,15 @@ class Mixer(models.Model):
 class Garnish(models.Model):
     product = models.OneToOneField(Product, on_delete=models.CASCADE, primary_key=True)
     made_in_house = models.BooleanField(default=False)
+    notes = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return self.product.product_name
+
+class Cocktail(models.Model):
+    product = models.OneToOneField(Product, on_delete=models.CASCADE, primary_key=True)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True, blank=True)
+    garnish = models.ManyToManyField(Garnish, blank=True)
     notes = models.TextField(null=True, blank=True)
 
     def __str__(self):

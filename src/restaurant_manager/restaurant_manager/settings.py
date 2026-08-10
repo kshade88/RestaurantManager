@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'taggit',
     'django_extensions',
     'debug_toolbar',
+    'recipe'
 ]
 
 MIDDLEWARE = [
