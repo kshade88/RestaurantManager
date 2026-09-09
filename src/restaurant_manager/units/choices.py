@@ -9,6 +9,7 @@ class VolumeUnit(models.TextChoices):
     PINT = 'pt', 'Pint'
     QUART = 'qt', 'Quart'
     GALLON = 'gal', 'Gallon'
+    FLUID_OUNCE = 'fl oz', 'Fluid Ounce'
 
 class WeightUnit(models.TextChoices):
     GRAM = 'g', 'Gram'
@@ -28,3 +29,4 @@ class CulinaryUnit(models.TextChoices):
     CUBE = 'cube', 'Cube'
 
 RECIPE_UNITS = VolumeUnit.choices + WeightUnit.choices + CountUnit.choices + CulinaryUnit.choices
+INVENTORY_UNITS = VolumeUnit.choices + WeightUnit.choices

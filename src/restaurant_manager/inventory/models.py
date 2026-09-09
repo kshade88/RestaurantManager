@@ -1,5 +1,6 @@
 from django.db import models
 from products.models import Product
+from units.choices import INVENTORY_UNITS
 
 # Create your models here.
 class Distributor(models.Model):
@@ -18,7 +19,7 @@ class Distributor(models.Model):
 class  StockItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     size = models.DecimalField(max_digits=10, decimal_places=2)
-    units = models.CharField(max_length=50) 
+    units = models.CharField(max_length=50, choices=INVENTORY_UNITS)
     # last ordered unit cost
     last_purchased_unit_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     # weighted average cost
