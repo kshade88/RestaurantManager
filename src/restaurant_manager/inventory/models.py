@@ -34,7 +34,7 @@ class  StockItem(models.Model):
 # represents the inventory stock (quantity on hand) for a specific stock item
 class InventoryStock(models.Model):
     stock_item = models.OneToOneField(StockItem, on_delete=models.CASCADE, related_name='inventory_stock')
-    quantity = models.DecimalField(max_digits=10, decimal_places=1)     
+    quantity = models.DecimalField(max_digits=10, decimal_places=3)     
 
     def __str__(self):
         return f"{self.stock_item.product.product_name} - {self.quantity}"
