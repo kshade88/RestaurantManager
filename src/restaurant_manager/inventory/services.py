@@ -6,66 +6,9 @@ from django.db import transaction
 from decimal import Decimal
 
 from .models import InventoryStock, Order, OrderItem, StockItem
+from units.choices import VolumeUnit, WeightUnit
+from units.conversions import convert_volume, convert_weight
 
-
-# def process_order(order):
-#     """Update inventory stock based on a received order.
-
-#     Args:
-#         order: An order object representing the received order.
-
-#     Returns:
-#         The updated inventory stock object.
-#     """
-#     if order.processed:
-#         return False
-#     for order_item in order.order_items.all():
-#         inventory_item = InventoryStock.objects.get(stock_item=order_item.stock_item)
-#         inventory_item.quantity += order_item.quantity_received
-#         inventory_item.save()
-#     order.processed = True
-#     order.save()
-#     return inventory_item
-
-# def check_low_stock(stock_item):
-#     """
-#     Take the inventory stock and par level and check if the stock is below the par level.
-    
-#     Args:
-#         stock_item: The stock item to check for low inventory.
-
-#     Returns:
-#         True if the inventory stock is below the par level, False otherwise.
-#     """
-#     inventory_stock = InventoryStock.objects.get(stock_item=stock_item)
-
-#     if inventory_stock.quantity < stock_item.par_level:
-#         return True
-#     return False
-
-# # refactor for more accutate value
-# def calculate_item_inventory_value(stock_item):
-#     """
-#     Calculate the total inventory value for a given stock item.
-
-#     Args:
-#         stock_item: The stock item for which to calculate the inventory value.
-
-#     Returns:
-#         The total inventory value (quantity * unit cost) for the stock item.
-#     """
-#     inventory_stock = InventoryStock.objects.get(stock_item=stock_item)
-
-#     past_thirty_days = timezone.now() - timedelta(days=30)
-#     recent_orders = OrderItem.objects.filter(
-#         stock_item=stock_item,
-#         order_date__gte=past_thirty_days
-#     )
-#     average_unit_cost = recent_orders.aggregate(average=Avg('unit_cost_at_purchase'))
-
-
-
-#     return inventory_stock.quantity * (average_unit_cost['average'] or 0)
 
 def calculate_moving_average_cost(
         *,
@@ -79,18 +22,7 @@ def calculate_moving_average_cost(
     quantity_received = Decimal(quantity_received)
     current_average_unit_cost = Decimal(current_average_unit_cost)
     quantity = Decimal(quantity)
-    """
-    Calculate the moving average cost for a stock item.
-
-    Args:
-        unit_cost_at_purchase: The unit cost of the newly received stock.
-        quantity_received: The quantity of the newly received stock.
-        current_average_unit_cost: The previous weighted average cost of the stock item.
-        quantity: The previous quantity on hand of the stock item.
-
-    Returns:
-        The updated moving average cost.
-    """
+    
     if quantity_received < 0:
         raise ValueError("Received quantity must be greater than zero")
     
@@ -135,6 +67,68 @@ def process_order(order):
         stock_item.save(update_fields=['current_average_unit_cost', 'last_purchased_at', 'last_purchased_unit_cost'])
     order.processed = True
     order.save()
+
+
+def get_available_skus(product):
+    skus = StockItem.objects.filter(product=product).select_related('inventory_stock') 
+    available_skus = []
+    
+    for sku in skus:
+        if hasattr(sku, 'inventory_stock') and sku.inventory_stock.quantity > 0:
+            available_skus.append(sku)
+    
+    return available_skus
+
+def normalize_quantity(quantity, unit):
+    if unit in VolumeUnit.values:
+        quantity = convert_volume(quantity, from_unit=unit, to_unit='ml')
+        return Decimal(quantity)
+    elif unit in WeightUnit.values:
+        quantity = convert_weight(quantity, from_unit=unit, to_unit='g')
+        return Decimal(quantity)
+    else:
+        raise ValueError(f"Unsupported unit type: {unit}")
+
+def get_sku_available_quantity(sku):
+    normalized_size = normalize_quantity(sku.size, sku.units)
+    quantity = sku.inventory_stock.quantity if hasattr(sku, 'inventory_stock') else 0
+    return normalized_size * quantity
+
+def get_total_available_quantity(product):
+    skus = StockItem.objects.filter(product=product).select_related('inventory_stock')
+    total_quantity = sum(get_sku_available_quantity(sku) for sku in skus)
+    return total_quantity
+
+def calculate_sku_consumption(sku, quantity_to_consume):
+    available_quantity = get_sku_available_quantity(sku)
+    quantity_consumed = min(quantity_to_consume, available_quantity)
+    remaining_quantity_to_consume = quantity_to_consume - quantity_consumed
+    remaining_quantity_available = available_quantity - quantity_consumed
+    return remaining_quantity_to_consume, remaining_quantity_available
+
+def consume_product_inventory(product, quantity_to_consume):
+    available_product_quantity = get_total_available_quantity(product)
+    if quantity_to_consume > available_product_quantity:
+        raise ValueError(f"Not enough inventory to consume {quantity_to_consume} units of {product.product_name}. Available: {available_product_quantity} units.")
+
+    available_skus = get_available_skus(product)
+
+    for sku in available_skus:
+        if quantity_to_consume <= 0:
+            break
+
+        remaining_quantity_to_consume, remaining_quantity_available = calculate_sku_consumption(sku, quantity_to_consume)
+
+        # Update the inventory stock for the SKU
+        normalized_size = normalize_quantity(sku.size, sku.units)
+        new_quantity = remaining_quantity_available / normalized_size
+
+        sku.inventory_stock.quantity = new_quantity
+        sku.inventory_stock.save(update_fields=['quantity'])
+
+        quantity_to_consume = remaining_quantity_to_consume
+
+
 
 
 
